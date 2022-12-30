@@ -1,30 +1,27 @@
 import { mocks } from "./mock";
-export const resturantRequest = (location = "37.7749295,-122.4194155") => {
+import camelize from "camelize";
+
+export const resturantRequest = (locate) => {
+  console.log("resService");
+  console.log(`locate is : ${locate}`);
   return new Promise((resolve, reject) => {
-    const mock = mocks[location];
+    const mock = mocks[locate];
     if (!mock) {
       reject("Location not Found!!");
+      console.log("resService: REjecet");
     }
-    resolve(mock);
+    resolve(resturantsTransform(mock));
+    console.log("resService resolved");
   });
 };
 
-const resturantsTransformed = ({ results = [] }) => {
-  const mappedResults = results.map((resturant) => {
+const resturantsTransform = ({ results }) => {
+  const mappedResults = camelize(results).map((resturant) => {
     return {
       ...resturant,
+      isOpenNow: resturant.opening_hours && resturant.opening_hours.open_now,
       isClosedTemporarily: resturant.business_status === "CLOSED_TEMPORARILY",
     };
   });
-  console.log(mappedResults);
-  return results;
+  return mappedResults;
 };
-
-resturantRequest()
-  .then(resturantsTransformed)
-  .then((transformedResponse) => {
-    // console.log(transformedResponse);
-  })
-  .catch((err) => {
-    console.log(err);
-  });

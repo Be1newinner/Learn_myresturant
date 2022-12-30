@@ -8,8 +8,8 @@ import Map from "./src/features/map/screens/Map";
 import Setting from "./src/features/setting/screens/Setting";
 import { SafeArea } from "./src/components/Utility/safe_area";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { resturantRequest } from "./src/services/resturants/resturantService";
-
+import { ResturantsContextProvider } from "./src/services/resturants/resturantContext";
+import { LocationContextProvider } from "./src/services/location/locationContext";
 const Tab = createBottomTabNavigator();
 
 const TabIconNames = {
@@ -48,10 +48,14 @@ function MyTabs() {
 export default function App() {
   return (
     <PaperProvider>
-      <NavigationContainer>
-        <MyTabs />
-        <StatusBar style="auto" />
-      </NavigationContainer>
+      <LocationContextProvider>
+        <ResturantsContextProvider>
+          <NavigationContainer>
+            <MyTabs />
+            <StatusBar style="auto" />
+          </NavigationContainer>
+        </ResturantsContextProvider>
+      </LocationContextProvider>
     </PaperProvider>
   );
 }
